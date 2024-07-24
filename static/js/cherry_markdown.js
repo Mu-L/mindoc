@@ -131,6 +131,40 @@ $(function () {
         onClick: showHistory,
     });
 
+    let customMenuTools =  Cherry.createMenuHook('工具',  {
+        iconName: '',
+        subMenuConfig: [
+            {
+                iconName: 'word',
+                name: 'Word转笔记',
+                onclick: ()=>{
+                    let converter = new WordToHtmlConverter();
+                    converter.handleFileSelect(function (response) {
+                        if (response.messages.length) {
+                            let messages = response.messages.map((item)=>{
+                                return item.message + "<br/>";
+                            }).join('\n');
+                            layer.msg(messages);
+                        }
+                        converter.replaceHtmlBase64(response.value).then((html)=>{
+                            window.editor.insertValue(html);
+                        });
+                    })
+                }
+            },
+            {
+                noIcon: true,
+                name: 'Htm转Markdown',
+                onclick: ()=>{
+                    let converter = new HtmlToMarkdownConverter();
+                    converter.handleFileSelect(function (response) {
+                        window.editor.insertValue(response);
+                    })
+                }
+            }
+        ]
+    });
+
 
     var basicConfig = {
         id: 'manualEditorContainer',
@@ -226,6 +260,7 @@ $(function () {
                 'switchModel',
                 'export',
                 'customMenuFName',
+                'customMenuToolsName'
             ],
             bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', 'ruby', '|', 'size', 'color'], // array or false
             sidebar: ['mobilePreview', 'copy', 'codeTheme', 'theme'],
@@ -236,6 +271,7 @@ $(function () {
                 customMenuDName: customMenuD,
                 customMenuEName: customMenuE,
                 customMenuFName: customMenuF,
+                customMenuToolsName: customMenuTools,
             },
         },
         drawioIframeUrl: '/static/cherry/drawio_demo.html',
@@ -600,6 +636,13 @@ $(function () {
             resetEditorChanged(true);
         }
         $("#documentTemplateModal").modal('hide');
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === 's') {
+            event.preventDefault();
+            saveDocument(true, null);
+        }
     });
 });
 

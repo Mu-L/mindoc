@@ -2670,7 +2670,7 @@ div[data-type=codeBlock] .token.inserted {
 
 .cherry-dropdown {
   position: absolute;
-  width: 130px;
+  width: 140px;
   min-height: 40px;
   background: #fff;
   box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.5);
@@ -6077,4 +6077,16 @@ iframe.cherry-dialog-iframe {
 span.change {
   border-radius: 10px !important;
   background-color: #b3d4fc !important;
+}
+
+
+@media screen and (max-width: 1400px) {
+  .cherry-toolbar-button {
+    padding: 0;
+  }
+
+  .cherry-toolbar .toolbar-left {
+    justify-content: space-between;
+    width: 95%;
+  }
 }

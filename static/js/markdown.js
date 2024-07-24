@@ -436,6 +436,26 @@ $(function () {
 
             drawio.processMarkers(selStartLine, selEndLine)
             drawio.show()
+        } else if (name === 'wordToContent') {
+            let converter = new WordToHtmlConverter();
+            converter.handleFileSelect(function (response) {
+                if (response.messages.length) {
+                    let messages = response.messages.map((item)=>{
+                        return item.message + "<br/>";
+                    }).join('\n');
+                    layer.msg(messages);
+                }
+                converter.replaceHtmlBase64(response.value).then((html)=>{
+                    let cm = window.editor.cm;
+                    cm.replaceSelection(html);
+                });
+            })
+        } else if (name === 'htmlToMarkdown') {
+            let converter = new HtmlToMarkdownConverter();
+            converter.handleFileSelect(function (response) {
+                let cm = window.editor.cm;
+                cm.replaceSelection(response);
+            })
         } else {
             var action = window.editor.toolbarHandlers[name];
 
